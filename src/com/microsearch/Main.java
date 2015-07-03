@@ -11,19 +11,28 @@ public class Main {
         configuration.setDictionaryPath("resource:/edu/cmu/sphinx/models/en-us/cmudict-en-us.dict");
         configuration.setLanguageModelPath("resource:/edu/cmu/sphinx/models/en-us/en-us.lm.bin");
 
-        try {
-            StreamSpeechRecognizer recognizer = new StreamSpeechRecognizer(configuration);
-            recognizer.startRecognition(new FileInputStream("speech.wav"));
-            SpeechResult result;
+        for (String source : args) {
+            String speechFileName = source + ".wav";
+            String textFileName = source + ".txt";
+            try {
+                StreamSpeechRecognizer recognizer = new StreamSpeechRecognizer(configuration);
+                recognizer.startRecognition(new FileInputStream(speechFileName));
 
-            System.out.println("----------------------------------------------");
-            while ((result = recognizer.getResult()) != null) {
-                System.out.println(result.getHypothesis());
+                BufferedWriter out = new BufferedWriter(new FileWriter(textFileName));
+                out.write("source: " + speechFileName + "\n-------\n");
+
+                SpeechResult result;
+                while ((result = recognizer.getResult()) != null) {
+                    out.write(result.getHypothesis());
+                    out.newLine();
+                }
+
+                out.close();
+                recognizer.stopRecognition();
+            } catch (IOException ex) {
+                System.out.println("IOException thrown");
+                System.out.println(ex.getMessage());
             }
-            recognizer.stopRecognition();
-        } catch (IOException ex) {
-            System.out.println("IOException thrown");
-            System.out.println(ex.getMessage());
         }
     }
 }
