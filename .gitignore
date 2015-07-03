@@ -1,0 +1,6 @@
+*.jar
+*.wav
+*.mp3
+out
+workspace.xml
+tasks.xml
