@@ -1,7 +1,10 @@
 package com.microsearch;
 
 import java.io.*;
+import java.util.Collection;
+
 import edu.cmu.sphinx.api.*;
+import edu.cmu.sphinx.result.WordResult;
 
 public class Main {
 
@@ -23,16 +26,23 @@ public class Main {
 
                 SpeechResult result;
                 while ((result = recognizer.getResult()) != null) {
-                    out.write(result.getHypothesis());
-                    out.newLine();
+                    DumpSpeechResult(out, result);
                 }
 
                 out.close();
                 recognizer.stopRecognition();
             } catch (IOException ex) {
-                System.out.println("IOException thrown");
-                System.out.println(ex.getMessage());
+                System.out.println("IOException: " + ex.getMessage());
             }
+        }
+    }
+
+    private static void DumpSpeechResult(BufferedWriter out, SpeechResult result) throws IOException {
+        out.write(result.getHypothesis());
+        out.newLine();
+        for (WordResult wp : result.getWords()) {
+            out.write("  " + wp.toString());
+            out.newLine();
         }
     }
 }
