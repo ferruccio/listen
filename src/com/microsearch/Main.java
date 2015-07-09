@@ -42,6 +42,12 @@ public class Main {
         out.newLine();
         for (WordResult wp : result.getWords()) {
             out.write("  " + wp.toString());
+            out.write(" conf: ");
+            out.write(Double.toString(wp.getConfidence()));
+            out.write(", score: ");
+            out.write(Double.toString(wp.getScore()));
+            out.write("\n    ");
+            out.write(wp.getPronunciation().toString());
             out.newLine();
         }
     }
